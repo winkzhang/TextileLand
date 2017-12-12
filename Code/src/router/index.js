@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import IndexView from '@/components/IndexView'
 
 Vue.use(Router)
 
@@ -8,8 +8,16 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      redirect: '/home'
+    },
+    {
+      path: '#',
+      redirect: '/home'
+    },
+    {
+      path: '/home',
+      name: 'IndexView',
+      component: IndexView
     }
   ]
 })
