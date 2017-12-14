@@ -1,17 +1,21 @@
 <template>
   <div id="app">
     <div class="header">
-      <i class="logo logo-header"></i>
-      <button class="login action">登录</button>
-      <button class="register action">注册</button>
+      <div class="header-wrapper">
+        <i class="logo logo-header"></i>
+        <button class="login action">登录</button>
+        <button class="register action">注册</button>
+      </div>
     </div>
     <router-view/>
     <div class="footer">
-      <i class="logo logo-footer"></i>
-      <i class="logo-ch"></i>
-      <span class="word-footer">网站首页</span>
-      <span class="word-footer" style="right:240px;">联系我们</span>
-      <span class="word-footer" style="right:360px;">版权所有</span>
+      <div class="footer-wrapper">
+        <i class="logo logo-footer"></i>
+        <i class="logo-ch"></i>
+        <span class="word-footer">网站首页</span>
+        <span class="word-footer" style="right:240px;">联系我们</span>
+        <span class="word-footer" style="right:360px;">版权所有</span>
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +40,12 @@ export default {
   .header {
     height: 50px;
     background-color: #333333;
+    /*position: relative;*/
+  }
+  .header-wrapper {
+    width: 1280px;
+    height: 50px;
+    margin: 0 auto;
     position: relative;
   }
   .logo {
@@ -45,7 +55,7 @@ export default {
     width: 140px;
     height: 50px;
     position: absolute;
-    left: 43px;
+    left: 0px;
   }
   .logo-footer {
     top: 20px;
@@ -57,7 +67,7 @@ export default {
     width: 140px;
     height: 40px;
     position: absolute;
-    left: 43px;
+    left: 0px;
     top: 70px;
   }
   .action {
@@ -72,15 +82,22 @@ export default {
     cursor: pointer;
   }
   .login {
-    right: 103px;
+    right: 65px;
   }
   .register {
-    right: 43px;
+    right: 0px;
   }
   .footer {
     height: 160px;
     background-color: #333333;
+
+  }
+  .footer-wrapper {
+    height: 160px;
+    width: 1280px;
+    margin: 0 auto;
     position: relative;
+
   }
   .word-footer {
     color: #fff;
