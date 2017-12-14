@@ -1,21 +1,33 @@
 <template>
   <div class="index">
-    这是首页
+    <div class="carousel">
+      <mySwiper></mySwiper>
+    </div>
   </div>
 </template>
 
 <script>
+  import mySwiper from '../components/MySwiper.vue'
   export default {
     name: 'IndexView',
+    components: {
+      mySwiper
+    },
     data () {
       return {
-        msg: 'Welcome to Your Vue.js App'
+
+        }
       }
-    }
+
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.index {
+  background-color: #E6EAEA;
+}
+/*.carousel {
+  height: 364px;
+}*/
 </style>

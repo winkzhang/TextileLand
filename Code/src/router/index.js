@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import IndexView from '@/components/IndexView'
+import IndexView from '@/pages/IndexView'
 
 Vue.use(Router)
 

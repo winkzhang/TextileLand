@@ -89,4 +89,10 @@ export default {
     top: 80px;
     right: 120px;
   }
+  .VueCarousel-pagination[data-v-7e42136f] {
+    width: 100%;
+    position: relative;
+    top: -90px;
+    text-align: center;
+  }
 </style>
