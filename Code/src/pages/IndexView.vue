@@ -17,6 +17,25 @@
             <div class="product-name"><span>{{item.name}}</span></div>
           </div>
       </div>
+      <div class="product-title">
+        <i class="store-title-img"></i>
+        <span class="product-title-word">入驻商家</span>
+      </div>
+      <div class="store-wrapper">
+        <div v-for="item in stores" class="store-per">
+          <div class="store-name">{{item.name}}</div>
+          <div class="store-address">
+            <i class="store-address-img"></i>
+            <span class="store-address-word">{{item.address}}</span>
+          </div>
+          <div class="store-star">
+            <i class="store-star-img"></i>
+            <span class="store-star-word">主打{{item.star}}等</span>
+          </div>
+          <a class="store-go"><i class="store-go-img"></i><span>逛一逛</span></a>
+        </div>
+
+      </div>
     </div>
   </div>
 </template>
@@ -30,7 +49,8 @@
     },
     data () {
       return {
-        products: {}
+        products: [],
+        stores: []
       }
     },
     methods: {
@@ -61,10 +81,30 @@
         products.push(detail5);
         products.push(detail6);
         return products;
+      },
+      getStore: function() {
+        var stores = [];
+        var detail1 = {};
+        detail1.name = "彬彬纺织贸易有限公司";
+        detail1.address = "广东省东莞市大朗镇康丰路90号";
+        detail1.star = "长纤人造毛";
+        var detail2 = {};
+        detail2.name = "泓鑫泰纺织有限公司";
+        detail2.address = "广东省东莞市大朗镇富康路286-288号";
+        detail2.star = "有色棉纱";
+        var detail3 = {};
+        detail3.name = "锦淼纺织有限公司";
+        detail3.address = "广东省东莞市大朗镇富华北路293号";
+        detail3.star = "羊毛马海毛";
+        stores.push(detail1);
+        stores.push(detail2);
+        stores.push(detail3);
+        return stores;
       }
     },
     mounted () {
       this.products = this.getProduct();
+      this.stores = this.getStore();
     }
 
   }
@@ -75,7 +115,6 @@
 #index {
   background-color: #E6EAEA;
   font-family: Microsoft YaHei;
-  margin-bottom: 100px;
 }
 .container {
   width: 1280px;
@@ -96,6 +135,15 @@
     position: absolute;
     left: 0px;
   }
+  .store-title-img {
+    display:inline-block;
+    background: url("../assets/home/stores.png") no-repeat;
+    background-size: 40px 40px;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 0px;
+  }
 .product-title-word {
   position: absolute;
   left: 60px;
@@ -109,15 +157,27 @@
   zoom: 1;
   margin-left: -30px;
 }
+.store-wrapper {
+  padding-bottom: 30px;
+}
 .item-per {
   height: 306px;
   width: 232px;
   float: left;
-  margin-left: 30px;
+  margin-left: 29.2px;
   margin-bottom: 30px;
   background-color: #fff;
   box-shadow: 5px 5px 2px #999999;
   cursor: pointer;
+}
+.store-per {
+  height: 180px;
+  width: 1280px;
+  margin-bottom: 30px;
+  border-radius: 30px;
+  box-shadow: -3px -3px 2px #F57905;
+  background-color: #fff;
+  position: relative;
 }
 .product-img {
   height: 230px;
@@ -147,5 +207,81 @@
   position: relative;
   top: 24px;
 }
-
+.store-name {
+  position: absolute;
+  left: 35px;
+  top: 30px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #333333;
+}
+.store-address {
+  height: 22px;
+  position: absolute;
+  left: 35px;
+  top: 80px;
+}
+.store-address-img {
+  display:inline-block;
+  background: url("../assets/home/location.png") no-repeat;
+  background-size: 22px 22px;
+  width: 22px;
+  height: 22px;
+}
+.store-address-word {
+  margin-left: 12px;
+  font-size: 15px;
+  color: #333333;
+  position: relative;
+  top: -4px;
+}
+.store-star {
+  height: 40px;
+  position: absolute;
+  left: 35px;
+  top: 125px;
+}
+.store-star-img {
+  display:inline-block;
+  background: url("../assets/home/hot.png") no-repeat;
+  background-size: 35px 35px;
+  width: 35px;
+  height: 35px;
+}
+.store-star-word {
+  margin-left: 12px;
+  font-size: 15px;
+  color: #333333;
+  position: relative;
+  top: -10px;
+}
+.store-go {
+  display: inline-block;
+  width: 160px;
+  height: 70px;
+  background-color: #F57905;
+  border-radius: 8px;
+  position: absolute;
+  top: 80px;
+  right: 85px;
+  cursor: pointer;
+}
+.store-go span {
+  color: #fff;
+  font-weight: bold;
+  font-size: 26px;
+  position: absolute;
+  top: 18px;
+  left: 65px;
+}
+.store-go-img {
+  display:inline-block;
+  background: url("../assets/home/goin.png") no-repeat;
+  background-size: 40px 40px;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 16px;
+  left: 15px;
+}
 </style>

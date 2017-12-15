@@ -4,8 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueCarousel  from 'vue-carousel'
+import Element from 'element-ui'
 
 Vue.use(VueCarousel)
+Vue.use(Element)
 
 Vue.config.productionTip = false
 
