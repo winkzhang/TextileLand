@@ -3,8 +3,8 @@
     <div class="header">
       <div class="header-wrapper">
         <i class="logo logo-header"></i>
-        <button class="login action">登录</button>
-        <button class="register action">注册</button>
+        <a class="login action" @click="showLogIn = true">登录</a>
+        <a class="register action">注册</a>
       </div>
     </div>
     <router-view/>
@@ -17,12 +17,26 @@
         <span class="word-footer" style="right:360px;">版权所有</span>
       </div>
     </div>
+    <el-dialog :visible.sync="showLogIn">
+      <!--在el-dialog加类会导致点击其他地方不能关掉-->
+      <div class="login-box">
+        <div class="box-header"></div>
+        <div class="login-content"></div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  data () {
+    return {
+      showLogIn: false
+    }
+  },
+  methods: {
+  }
 }
 </script>
 
@@ -71,12 +85,11 @@ export default {
     top: 70px;
   }
   .action {
+    display: inline-block;
     position: absolute;
-    top: 5px;
+    top: 15px;
     width: 45px;
     height: 40px;
-    border: none;
-    background-color: #333333;
     color: #fff;
     font-size: 16px;
     cursor: pointer;
@@ -111,5 +124,27 @@ export default {
     position: relative;
     top: -90px;
     text-align: center;
+  }
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+  }
+  .login-box {
+    height: 389px;
+    width: 483px;
+    background-color: #fff;
+    position: fixed;
+    top: 20%;
+    left: 30%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+
+  .box-header {
+    height: 65px;
+    width: 483px;
+    background-color: #333;
   }
 </style>

@@ -5,9 +5,14 @@ import App from './App'
 import router from './router'
 import VueCarousel  from 'vue-carousel'
 import Element from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+/*import Button from 'element-ui/packages/button'
+import Dialog from 'element-ui/packages/dialog'*/
 
 Vue.use(VueCarousel)
 Vue.use(Element)
+/*Vue.component(Button.name, Button)
+Vue.component(Dialog.name, Dialog)*/
 
 Vue.config.productionTip = false
 
