@@ -1,0 +1,32 @@
+// 用户注册
+// http://localhost:8080/signup
+// method: post
+// POSTbody:
+   var register = {};
+   register.number = "18819253694";
+   register.username = "wink";
+   register.password = "123456";
+   register.identity = "customer";
+// respond:
+   var req = {isSuccess:true, msg:"注册成功"};
+   if (req.isSuccess == true) {
+     req.msg = "注册成功"
+   } else {
+     req.msg = "该手机号已存在" || "该用户名已存在";
+   }
+
+// 用户登录
+// http://localhost:8080/login
+// method: post
+//POSTbody:
+  var login = {};
+  login.number = "18819253694";
+  login.password = "123456";
+  login.identity = "vendor";
+// respond:
+   var req = {isSuccess:true, msg:"登录成功"};
+    if (req.isSuccess == true) {
+      req.msg = "登录成功"
+    } else {
+      req.msg = "用户不存在，请先注册" || "密码错误";
+    }

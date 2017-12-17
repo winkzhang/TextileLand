@@ -4,7 +4,7 @@
       <div class="header-wrapper">
         <i class="logo logo-header"></i>
         <a class="login action" @click="showLogIn = true">登录</a>
-        <a class="register action">注册</a>
+        <a class="register action" @click="showSignUp = true">注册</a>
       </div>
     </div>
     <router-view/>
@@ -20,8 +20,31 @@
     <el-dialog :visible.sync="showLogIn">
       <!--在el-dialog加类会导致点击其他地方不能关掉-->
       <div class="login-box">
-        <div class="box-header"></div>
-        <div class="login-content"></div>
+        <div class="box-header">
+          <i class="logo logo-login"></i>
+        </div>
+        <div class="login-content">
+          <div class="login-title">登录</div>
+          <div class="login-item"><label>手机号</label><el-input class="login-input" type="text"></el-input></div>
+          <div class="login-item"><label>密码</label><el-input class="login-input" type="password" ></el-input></div>
+          <a class="login-button" @click="showLogIn = false"><span>登录</span></a>
+        </div>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="showSignUp">
+      <!--在el-dialog加类会导致点击其他地方不能关掉-->
+      <div class="sign-box">
+        <div class="box-header">
+          <i class="logo logo-login"></i>
+        </div>
+        <div class="sign-content">
+          <div class="sign-title">注册</div>
+          <div class="sign-item"><label>手机号</label><el-input class="login-input" type="text"></el-input></div>
+          <div class="sign-item"><label>用户名</label><el-input class="login-input" type="text"></el-input></div>
+          <div class="sign-item"><label>密码</label><el-input class="login-input" type="password" ></el-input></div>
+          <div class="sign-item"><label>确认密码</label><el-input class="login-input" type="password" ></el-input></div>
+          <a class="sign-button" @click="showSignUp = false"><span>注册</span></a>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -32,7 +55,8 @@ export default {
   name: 'app',
   data () {
     return {
-      showLogIn: false
+      showLogIn: false,
+      showSignUp: false
     }
   },
   methods: {
@@ -69,10 +93,13 @@ export default {
     width: 140px;
     height: 50px;
     position: absolute;
+  }
+  .logo-header {
     left: 0px;
   }
   .logo-footer {
     top: 20px;
+    left: 0px;
   }
   .logo-ch {
     display:inline-block;
@@ -138,13 +165,108 @@ export default {
     position: fixed;
     top: 20%;
     left: 30%;
-    overflow-x: hidden;
-    overflow-y: hidden;
+  }
+  .sign-box {
+    height: 474px;
+    width: 483px;
+    background-color: #fff;
+    position: fixed;
+    top: 16%;
+    left: 30%;
   }
 
   .box-header {
     height: 65px;
     width: 483px;
     background-color: #333;
+    position: relative;
+  }
+  .login-content {
+    height: 324px;
+    width: 483px;
+  }
+  .sign-content {
+    height: 409px;
+    width: 483px;
+  }
+  .logo-login {
+    top: 5px;
+    left: 171.5px;
+  }
+  .login-title {
+    width: 130px;
+    height: 45px;
+    font-weight: bold;
+    font-size: 24px;
+    color: #333333;
+    margin:  30px auto;
+  }
+  .sign-title {
+    width: 130px;
+    height: 45px;
+    font-weight: bold;
+    font-size: 24px;
+    color: #333333;
+    margin:  16px auto;
+  }
+  .login-item {
+    height: 41px;
+    width: 423px;
+    margin: 0 auto 30px auto;
+    position: relative;
+  }
+  .sign-item {
+    height: 41px;
+    width: 423px;
+    margin: 0 auto 25px auto;
+    position: relative;
+  }
+  .login-item label, .sign-item label {
+    display: inline-block;
+    width: 74px;
+    position: absolute;
+    left: 0px;
+    top: 10px;
+    text-align: right;
+    font-size: 18px;
+    color: #333333;
+  }
+  .login-input {
+    width: 300px;
+    height: 41px;
+    position: absolute;
+    left: 110px;
+    border: 1px solid #979797;
+    border-radius: 5px;
+  }
+  .el-input__inner {
+    height: 41px;
+    border: 0px solid #979797;
+  }
+  .login-button {
+    display: inline-block;
+    width: 398px;
+    height: 48px;
+    background-color: #F57905;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .login-button span, .sign-button span {
+    display: inline-block;
+    margin-top: 10px;
+  }
+  .sign-button {
+    display: inline-block;
+    width: 412px;
+    height: 48px;
+    background-color: #F57905;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
   }
 </style>
