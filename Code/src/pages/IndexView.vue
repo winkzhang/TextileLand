@@ -32,7 +32,7 @@
             <i class="store-star-img"></i>
             <span class="store-star-word">主打{{item.star}}等</span>
           </div>
-          <a class="store-go"><i class="store-go-img"></i><span>逛一逛</span></a>
+          <a class="store-go" @click="jumpToVendor"><i class="store-go-img"></i><span>逛一逛</span></a>
         </div>
 
       </div>
@@ -103,6 +103,9 @@
       },
       jumpToProduct: function() {
         this.$router.push('/product');
+      },
+      jumpToVendor: function() {
+        this.$router.push('/vendor');
       }
     },
     mounted () {

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import IndexView from '@/pages/IndexView'
 import ProductDetail from '@/pages/ProductDetail'
+import VendorDetail from '@/pages/VendorDetail'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/product',
       name: 'ProductDetail',
       component: ProductDetail
+    },
+    {
+      path: '/vendor',
+      name: 'VendorDetail',
+      component: VendorDetail
     }
   ]
 })
