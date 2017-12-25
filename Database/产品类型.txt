@@ -1,0 +1,8 @@
+//产品类型
+名字   string
+图片   img
+简介   string
+成分   string
+特点   string
+制作   string
+价格   number

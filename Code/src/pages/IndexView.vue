@@ -9,7 +9,7 @@
         <span class="product-title-word">产品分类</span>
       </div>
       <div class="product-wrapper">
-          <div v-for="item in products" class="item-per">
+          <div v-for="item in products" class="item-per" @click="jumpToProduct">
             <div class="product-img">
               <img class="product-pic" :src='item.url'  />
             </div>
@@ -100,6 +100,9 @@
         stores.push(detail2);
         stores.push(detail3);
         return stores;
+      },
+      jumpToProduct: function() {
+        this.$router.push('/product');
       }
     },
     mounted () {

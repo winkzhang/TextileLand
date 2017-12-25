@@ -25,9 +25,9 @@
         </div>
         <div class="login-content">
           <div class="login-title">登录</div>
-          <div class="login-item"><label>手机号</label><el-input class="login-input" type="text"></el-input></div>
-          <div class="login-item"><label>密码</label><el-input class="login-input" type="password" ></el-input></div>
-          <a class="login-button" @click="showLogIn = false"><span>登录</span></a>
+          <div class="login-item"><label>手机号</label><el-input class="login-input" type="text" v-model="loginPhone"></el-input></div>
+          <div class="login-item"><label>密码</label><el-input class="login-input" type="password" v-model="loginPassword"></el-input></div>
+          <a class="login-button" @click="login"><span>登录</span></a>
         </div>
       </div>
     </el-dialog>
@@ -39,11 +39,11 @@
         </div>
         <div class="sign-content">
           <div class="sign-title">注册</div>
-          <div class="sign-item"><label>手机号</label><el-input class="login-input" type="text"></el-input></div>
-          <div class="sign-item"><label>用户名</label><el-input class="login-input" type="text"></el-input></div>
-          <div class="sign-item"><label>密码</label><el-input class="login-input" type="password" ></el-input></div>
-          <div class="sign-item"><label>确认密码</label><el-input class="login-input" type="password" ></el-input></div>
-          <a class="sign-button" @click="showSignUp = false"><span>注册</span></a>
+          <div class="sign-item"><label>手机号</label><el-input class="login-input" type="text" v-model="signUpPhone"></el-input></div>
+          <div class="sign-item"><label>用户名</label><el-input class="login-input" type="text" v-model="signUpName"></el-input></div>
+          <div class="sign-item"><label>密码</label><el-input class="login-input" type="password" v-model="signUpPassword"></el-input></div>
+          <div class="sign-item"><label>确认密码</label><el-input class="login-input" type="password"></el-input></div>
+          <a class="sign-button" @click="signup"><span>注册</span></a>
         </div>
       </div>
     </el-dialog>
@@ -56,10 +56,47 @@ export default {
   data () {
     return {
       showLogIn: false,
-      showSignUp: false
+      showSignUp: false,
+      loginPhone: '',
+      loginPassword: '',
+      signUpPhone: '',
+      signUpName: '',
+      signUpPassword: ''
     }
   },
   methods: {
+    login: function() {
+      this.showLogIn = false;
+     /* var login = {};
+      login.number = this.loginPhone;
+      login.password = this.loginPassword;
+      login.identity = "customer";*/
+      var login = {
+        "number": this.loginPhone,
+        "password": this.loginPassword,
+        "identity": "customer"
+      }
+      this.$http.post('http://wink.net.cn:8080/login', login).then(
+        (response) => {
+          console.log(response);
+          console.log(JSON.parse(response.bodyText));
+          console.log(JSON.parse(response.bodyText).msg);
+
+        })
+    },
+    signup: function() {
+      var login = {
+        "number": this.signUpPhone,
+        "username": this.signUpName,
+        "password": this.signUpPassword,
+        "identity": "customer"
+      }
+      this.$http.post('http://wink.net.cn:8080/signup', login, {headers: {'Content-Type': 'text/plain'}}).then(
+        (response) => {
+          console.log(response.data.isSuccess);
+          console.log(response.data.msg);
+        })
+    }
   }
 }
 </script>
@@ -268,5 +305,66 @@ export default {
     font-size: 18px;
     border-radius: 8px;
     cursor: pointer;
+  }
+  .el-radio-button {
+    display: inline-block;
+    position: relative;
+    outline: 0;
+    margin-right: 20px;
+    height: 55px;
+    border: 0px solid #F57905;
+    background-color: #5C544D;
+    color: #fff;
+  }
+  .el-radio-button__inner {
+    display: inline-block;
+    position: relative;
+    outline: 0;
+    height: 55px;
+    border: 2px solid #F57905;
+    background-color: #5C544D;
+    padding: 16px 20px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+  }
+.el-radio-button:last-child .el-radio-button__inner {
+    border: 2px solid #F57905;
+    border-radius: 8px;
+}
+  .el-radio-button:first-child .el-radio-button__inner {
+
+    border: 2px solid #F57905;
+    border-radius: 8px;
+  }
+  .el-radio-button__orig-radio:checked+.el-radio-button__inner {
+    background-color: #F57905;
+    box-shadow: none;
+    border-color: #F57905;
+  }
+  .el-input__inner {
+    background-color: #5C544D;
+    border: 2px solid #F57905;
+    height: 55px;
+    border-radius: 8px;
+    color: #fff;
+  }
+  .el-input-number__decrease,  .el-input-number__increase{
+    height: 43px;
+    width: 50px;
+    border-radius-bottomleft: 8px;
+    border-radius-topleft: 8px;
+    border: 2px solid #F57905;
+    background-color: #F57905;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 5px;
+  }
+  .el-input-number .el-input {
+    border-radius: 8px;
+  }
+  .el-input-number__decrease:hover, .el-input-number__increase:hover {
+    color: #fff;
   }
 </style>
