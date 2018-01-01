@@ -57,7 +57,7 @@
       getProduct: function() {
         var products = [];
         var detail1 = {};
-        detail1.url = "static/type_one.png";
+        detail1.url = "http://og3rbw16y.bkt.clouddn.com/image/icon/"+"type_one.png";
         detail1.name = "长纤人造毛";
         var detail2 = {};
         detail2.url = "static/type_two.png";

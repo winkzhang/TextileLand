@@ -73,7 +73,7 @@
         <div class="product-control">
           <a class="buy-car"><i class="buy-car-icon"></i><span>加入购物车</span></a>
           <a class="ask-for-card"><i class="ask-for-card-icon"></i><span>索要色卡</span></a>
-          <a class="buy-now"><i class="buy-now-icon"></i><span>立即购买</span></a>
+          <a class="buy-now" @click="jumpToFirm"><i class="buy-now-icon"></i><span>立即购买</span></a>
         </div>
       </div>
     </div>
@@ -117,7 +117,12 @@
         selectedSize: '24/2',
         number: 1
       }
-    }
+    },
+    methods: {
+      jumpToFirm: function() {
+        this.$router.push('/firmorder');
+      }
+    },
 
   }
 </script>
