@@ -53,7 +53,7 @@
       <div class="account">
         <span class="account-word">合计：</span>
         <span class="account-price">￥{{totalPrice}}</span>
-        <a class="account-button">去支付</a>
+        <a class="account-button" @click="goPay">去支付</a>
       </div>
     </div>
   </div>
@@ -98,6 +98,9 @@
         orders.push(detail2);
         orders.push(detail3);
         return orders;
+      },
+      goPay: function() {
+        this.$router.push('/pay');
       }
     },
     mounted () {
@@ -331,6 +334,7 @@ span.order-number .order-per-number {
   right: 0px;
   text-align: center;
   padding-top: 10px;
+  cursor: pointer;
 }
 span.account-price {
   color: #F57905;

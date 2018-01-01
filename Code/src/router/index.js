@@ -4,6 +4,7 @@ import IndexView from '@/pages/IndexView'
 import ProductDetail from '@/pages/ProductDetail'
 import VendorDetail from '@/pages/VendorDetail'
 import FirmOrder from '@/pages/FirmOrder'
+import GoPay from '@/pages/GoPay'
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/firmorder',
       name: 'FirmOrder',
       component: FirmOrder
+    },
+    {
+      path: '/pay',
+      name: 'GoPay',
+      component: GoPay
     }
   ]
 })
