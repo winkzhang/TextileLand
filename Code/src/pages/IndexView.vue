@@ -54,10 +54,36 @@
       }
     },
     methods: {
+      /*getBase64Image: function(img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        var ext = img.src.substring(img.src.lastIndexOf(".")+1).toLowerCase();
+        var dataURL = canvas.toDataURL("image/"+ext);
+        return dataURL;
+       },*/
       getProduct: function() {
-        var products = [];
+        /*var image = new Image();
+        image.src = "static/type_one.png";
+        var base64 = this.getBase64Image(image);*/
+        this.$http.get('http://wink.net.cn:5000/homedisplay').then(
+          (response) => {
+            this.products = JSON.parse(response.bodyText);
+            this.products[0].url = "static/type_one.png";
+            this.products[1].url = "static/type_two.png";
+            this.products[2].url = "static/type_three.png";
+            this.products[3].url = "static/type_four.png";
+            this.products[4].url = "static/type_five.png";
+            this.products[5].url = "static/type_six.png";
+            this.products[6].url = "static/type_seven.png";
+            this.products[7].url = "static/type_eight.png";
+            this.products[8].url = "static/type_nine.png";
+            this.products[9].url = "static/type_ten.png";
+          })
+        /*var products = [];
         var detail1 = {};
-        detail1.url = "http://og3rbw16y.bkt.clouddn.com/image/icon/"+"type_one.png";
         detail1.name = "长纤人造毛";
         var detail2 = {};
         detail2.url = "static/type_two.png";
@@ -80,7 +106,7 @@
         products.push(detail4);
         products.push(detail5);
         products.push(detail6);
-        return products;
+        return products;*/
       },
       getStore: function() {
         var stores = [];

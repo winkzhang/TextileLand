@@ -3,8 +3,15 @@
     <div class="header">
       <div class="header-wrapper">
         <i class="logo logo-header"></i>
-        <a class="login action" @click="showLogIn = true">登录</a>
-        <a class="register action" @click="showSignUp = true">注册</a>
+        <div v-show="nouser">
+          <a class="login action" @click="showLogIn = true">登录</a>
+          <a class="register action" @click="showSignUp = true">注册</a>
+        </div>
+        <div v-show="haveuser">
+          <i class="buy-car new-action"></i>
+          <i class="my-order new-action" @click="jumpToOrder"></i>
+          <span class="username">{{username}}</span>
+        </div>
       </div>
     </div>
     <router-view/>
@@ -25,8 +32,8 @@
         </div>
         <div class="login-content">
           <div class="login-title">登录</div>
-          <div class="login-item"><label>手机号</label><el-input class="login-input" type="text" v-model="loginPhone"></el-input></div>
-          <div class="login-item"><label>密码</label><el-input class="login-input" type="password" v-model="loginPassword"></el-input></div>
+          <div class="login-item"><label>手机号</label><input class="login-input" type="text" v-model="loginPhone" /></div>
+          <div class="login-item"><label>密码</label><input class="login-input" type="password" v-model="loginPassword" /></div>
           <a class="login-button" @click="login"><span>登录</span></a>
         </div>
       </div>
@@ -39,10 +46,10 @@
         </div>
         <div class="sign-content">
           <div class="sign-title">注册</div>
-          <div class="sign-item"><label>手机号</label><el-input class="login-input" type="text" v-model="signUpPhone"></el-input></div>
-          <div class="sign-item"><label>用户名</label><el-input class="login-input" type="text" v-model="signUpName"></el-input></div>
-          <div class="sign-item"><label>密码</label><el-input class="login-input" type="password" v-model="signUpPassword"></el-input></div>
-          <div class="sign-item"><label>确认密码</label><el-input class="login-input" type="password"></el-input></div>
+          <div class="sign-item"><label>手机号</label><input class="login-input" type="text" v-model="signUpPhone" /></div>
+          <div class="sign-item"><label>用户名</label><input class="login-input" type="text" v-model="signUpName" /></div>
+          <div class="sign-item"><label>密码</label><input class="login-input" type="password" v-model="signUpPassword" /></div>
+          <div class="sign-item"><label>确认密码</label><input class="login-input" type="password" /></div>
           <a class="sign-button" @click="signup"><span>注册</span></a>
         </div>
       </div>
@@ -61,27 +68,30 @@ export default {
       loginPassword: '',
       signUpPhone: '',
       signUpName: '',
-      signUpPassword: ''
+      signUpPassword: '',
+      nouser: true,
+      haveuser: false,
+      username: ''
     }
   },
   methods: {
     login: function() {
       this.showLogIn = false;
-     /* var login = {};
-      login.number = this.loginPhone;
-      login.password = this.loginPassword;
-      login.identity = "customer";*/
       var login = {
         "number": this.loginPhone,
         "password": this.loginPassword,
         "identity": "customer"
       }
-      this.$http.post('http://wink.net.cn:8080/login', login).then(
+      this.$http.post('http://wink.net.cn:5000/login', login).then(
         (response) => {
-          console.log(response);
           console.log(JSON.parse(response.bodyText));
-          console.log(JSON.parse(response.bodyText).msg);
-
+          //console.log(JSON.parse(response.bodyText).msg);
+          this.$message(JSON.parse(response.bodyText).msg);
+          if (JSON.parse(response.bodyText).isSuccess === true) {
+            this.nouser = false;
+            this.haveuser = true;
+            this.username = JSON.parse(response.bodyText).info;
+          }
         })
     },
     signup: function() {
@@ -91,11 +101,14 @@ export default {
         "password": this.signUpPassword,
         "identity": "customer"
       }
-      this.$http.post('http://wink.net.cn:8080/signup', login, {headers: {'Content-Type': 'text/plain'}}).then(
+      this.$http.post('http://wink.net.cn:5000/signup', login).then(
         (response) => {
           console.log(response.data.isSuccess);
           console.log(response.data.msg);
         })
+    },
+    jumpToOrder: function() {
+      this.$router.push('/myorder');
     }
   }
 }
@@ -163,6 +176,31 @@ export default {
   }
   .register {
     right: 0px;
+  }
+  .username {
+    position: absolute;
+    top: 15px;
+    color: #ffffff;
+    font-size: 16px;
+    right: 0px;
+  }
+  .new-action {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+  }
+  .my-order {
+    background: url('assets/header/order.png') no-repeat;
+    background-size: 32px 32px;
+    right: 60px;
+  }
+  .buy-car {
+    background: url('assets/header/shoppingcar.png') no-repeat;
+    background-size: 32px 32px;
+    right: 110px;
   }
   .footer {
     height: 160px;

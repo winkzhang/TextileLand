@@ -4,7 +4,7 @@
       <span class="platform">纺织平台</span>
       <i class="rightArrow"></i>
       <span class="product-name">{{productName}}</span>
-      <a class="look-order">查看我的订单</a>
+      <a class="look-order" @click="goMyOrder">查看我的订单</a>
     </div>
     <div class="pay-img">
       <img src="../assets/order/pay.jpg" />
@@ -22,7 +22,9 @@
       }
     },
     methods: {
-
+      goMyOrder: function() {
+        this.$router.push('/myorder');
+      }
     },
     mounted () {
     }
