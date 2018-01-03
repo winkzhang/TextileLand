@@ -54,6 +54,13 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="showBuyCar">
+      <div class="buy-box">
+        <div class="buy-box-header">
+          <i class="logo buy-logo-login"></i>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -64,6 +71,7 @@ export default {
     return {
       showLogIn: false,
       showSignUp: false,
+      showBuyCar: true,
       loginPhone: '',
       loginPassword: '',
       signUpPhone: '',
@@ -249,10 +257,23 @@ export default {
     top: 16%;
     left: 30%;
   }
-
+  .buy-box {
+    height: 504px;
+    width: 584px;
+    background-color: #fff;
+    position: fixed;
+    top: 16%;
+    left: 28%;
+  }
   .box-header {
     height: 65px;
     width: 483px;
+    background-color: #333;
+    position: relative;
+  }
+  .buy-box-header {
+    height: 65px;
+    width: 584px;
     background-color: #333;
     position: relative;
   }
@@ -267,6 +288,10 @@ export default {
   .logo-login {
     top: 5px;
     left: 171.5px;
+  }
+  .buy-logo-login {
+    top: 5px;
+    left: 230px;
   }
   .login-title {
     width: 130px;

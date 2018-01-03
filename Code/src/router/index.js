@@ -25,7 +25,7 @@ export default new Router({
       component: IndexView
     },
     {
-      path: '/product',
+      path: '/product/:id',
       name: 'ProductDetail',
       component: ProductDetail
     },

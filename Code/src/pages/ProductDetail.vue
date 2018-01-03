@@ -7,7 +7,7 @@
         <span class="product-name">{{productName}}</span>
       </div>
       <div class="product-detail">
-        <div class="product-img"><img src="src/assets/product/fangyangrong.jpg" /></div>
+        <div class="product-img"><img :src="imageName" width="360" height="450" /></div>
         <div class="detail-right">
           <div class="detail-name">{{productName}}</div>
           <div class="detail-wrapper">
@@ -28,7 +28,7 @@
           <label class="per-title">选择商家</label>
           <div class="product-item-right">
             <el-radio-group v-model="selectedStore">
-              <el-radio-button v-for="item in stores" :key='item.key' :label='item.name'></el-radio-button>
+              <el-radio-button v-for="item in stores" :key='item.id' :label='item.company_name'></el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -75,26 +75,17 @@
     },
     data () {
       return {
-        productName: "长纤人造毛",
-        productIntro: "仿羊绒，是由晴纶经过特殊的工艺处理，使腈纶具有天然羊绒那种平滑、柔软，而富有弹性的手感，同时具有晴纶优良的染色性能的毛线。仿羊绒腈纶的纺丝、毛条的制造技术国内尚属首创。仿羊绒腈纶其独特的功能是膨松性和柔软性。",
-        productIngre: "100%Acrylic",
-        productCharac: "平滑、柔软，而富有弹性。",
-        productMake: "由腈纶经过特殊的工艺处理。",
-        productPrice: "30",
-        stores: [
-          {
-            name: '彬彬纺织贸易有限公司',
-            key: 'binbin'
-          }, {
-            name:'泓鑫泰纺织有限公司',
-            key: 'hong'
-          }, {
-            name: '锦淼纺织有限公司',
-            key: 'jinmiao'
-          }, {
-            name: '广顺棉纱经营部',
-            key: 'guangshun'
-          }],
+        productName: "",
+        productIntro: "",
+        productIngre: "",
+        productCharac: "",
+        productMake: "",
+        productPrice: "",
+        stores: [],
+        /*stores: [{
+          id: "",
+          company_name: ""
+        }],*/
         sizes: [
           {
             name: '28/2',
@@ -106,18 +97,73 @@
             name: '22/2',
             key: '22'
           }],
-        selectedStore: "彬彬纺织贸易有限公司",
+        selectedStore: "",
         selectedSize: '24/2',
-        number: 1
+        number: 1,
+        imageName: "",
+        productId: ""
       }
     },
     methods: {
       jumpToFirm: function() {
         this.$router.push('/firmorder');
+      },
+      getProductDetail: function(productId) {
+        this.$http.get('http://wink.net.cn:5000/product/detail?id='+productId).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.productName = JSON.parse(response.bodyText).data.name;
+              this.productIntro = JSON.parse(response.bodyText).data.info;
+              this.productIngre = JSON.parse(response.bodyText).data.ingredient;
+              this.productCharac = JSON.parse(response.bodyText).data.feature;
+              this.productMake = JSON.parse(response.bodyText).data.manufacture;
+              this.productPrice = JSON.parse(response.bodyText).data.average_price;
+              if (JSON.parse(response.bodyText).data.stores.length !== 0) {
+                this.stores = JSON.parse(response.bodyText).data.stores;
+                this.selectedStore = this.stores[0].company_name;
+              }
+              var id = JSON.parse(response.bodyText).data.id;
+              switch (id) {
+                case 1:
+                  this.imageName = "static/renzaomao.png";
+                  break;
+                case 2:
+                  this.imageName = "static/baoxinsha.png";
+                  break;
+                case 3:
+                  this.imageName = "static/mahaimao.png";
+                  break;
+                case 4:
+                  this.imageName = "static/bingshuangsi.png";
+                  break;
+                case 5:
+                  this.imageName = "static/siguangmian.png";
+                  break;
+                case 6:
+                  this.imageName = "static/miansha.png";
+                  break;
+                case 7:
+                  this.imageName = "static/fangyama.png";
+                  break;
+                case 8:
+                  this.imageName = "static/shuangqu.png";
+                  break;
+                case 9:
+                  this.imageName = "static/qingmian.png";
+                  break;
+                case 10:
+                  this.imageName = "static/lajia.png";
+                  break;
+              }
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
       }
     },
     mounted () {
-
+      this.productId = this.$route.params.id;
+      this.getProductDetail(this.productId);
     }
 
   }

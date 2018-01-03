@@ -1,0 +1,28 @@
+// 商品详情
+// http://wink.net.cn:5000/product/detail?id=1
+// method: get
+// respond:
+   var req = {
+     isSuccess: true,
+     msg: "获取商品信息成功",
+     data: {
+       id: "1",
+       name: "长纤人造毛",
+       info: "仿羊绒，是由晴纶经过特殊的工艺处理，使腈纶具有天然羊绒那种平滑、柔软，而富有弹性的手感，同时具有晴纶优良的染色性能的毛线。仿羊绒腈纶的纺丝、毛条的制造技术国内尚属首创。仿羊绒腈纶其独特的功能是膨松性和柔软性。",
+       ingredient: "100%Acrylic",
+       feature: "平滑、柔软，而富有弹性。",
+       manufacture: "由腈纶经过特殊的工艺处理。",
+       average_price: 30,
+       pic_path: "",
+       stores: [
+       {
+         id: "1",
+         name: "彬彬纺织贸易有限公司"
+       },
+       {
+         id: "2",
+         name: "泓鑫泰纺织贸易有限公司"
+       }]
+     }
+   };
+

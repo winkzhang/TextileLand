@@ -9,7 +9,7 @@
         <span class="product-title-word">产品分类</span>
       </div>
       <div class="product-wrapper">
-          <div v-for="item in products" class="item-per" @click="jumpToProduct">
+          <div v-for="item in products" class="item-per" @click="jumpToProduct(item.id)">
             <div class="product-img">
               <img class="product-pic" :src='item.url'  />
             </div>
@@ -68,67 +68,37 @@
         /*var image = new Image();
         image.src = "static/type_one.png";
         var base64 = this.getBase64Image(image);*/
-        this.$http.get('http://wink.net.cn:5000/homedisplay').then(
+        this.$http.get('http://wink.net.cn:5000/home/commodity').then(
           (response) => {
-            this.products = JSON.parse(response.bodyText);
-            this.products[0].url = "static/type_one.png";
-            this.products[1].url = "static/type_two.png";
-            this.products[2].url = "static/type_three.png";
-            this.products[3].url = "static/type_four.png";
-            this.products[4].url = "static/type_five.png";
-            this.products[5].url = "static/type_six.png";
-            this.products[6].url = "static/type_seven.png";
-            this.products[7].url = "static/type_eight.png";
-            this.products[8].url = "static/type_nine.png";
-            this.products[9].url = "static/type_ten.png";
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.products = JSON.parse(response.bodyText).data;
+              this.products[0].url = "static/type_one.png";
+              this.products[1].url = "static/type_two.png";
+              this.products[2].url = "static/type_three.png";
+              this.products[3].url = "static/type_four.png";
+              this.products[4].url = "static/type_five.png";
+              this.products[5].url = "static/type_six.png";
+              this.products[6].url = "static/type_seven.png";
+              this.products[7].url = "static/type_eight.png";
+              this.products[8].url = "static/type_nine.png";
+              this.products[9].url = "static/type_ten.png";
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
           })
-        /*var products = [];
-        var detail1 = {};
-        detail1.name = "长纤人造毛";
-        var detail2 = {};
-        detail2.url = "static/type_two.png";
-        detail2.name = "抗起球羊毛包芯纱";
-        var detail3 = {};
-        detail3.url = "static/type_three.png";
-        detail3.name = "羊毛马海毛";
-        var detail4 = {};
-        detail4.url = "static/type_four.png";
-        detail4.name = "抗起球冰爽丝";
-        var detail5 = {};
-        detail5.url = "static/type_five.png";
-        detail5.name = "有色丝光棉";
-        var detail6 = {};
-        detail6.url = "static/type_six.png";
-        detail6.name = "有色棉纱";
-        products.push(detail1);
-        products.push(detail2);
-        products.push(detail3);
-        products.push(detail4);
-        products.push(detail5);
-        products.push(detail6);
-        return products;*/
       },
       getStore: function() {
-        var stores = [];
-        var detail1 = {};
-        detail1.name = "彬彬纺织贸易有限公司";
-        detail1.address = "广东省东莞市大朗镇康丰路90号";
-        detail1.star = "长纤人造毛";
-        var detail2 = {};
-        detail2.name = "泓鑫泰纺织有限公司";
-        detail2.address = "广东省东莞市大朗镇富康路286-288号";
-        detail2.star = "有色棉纱";
-        var detail3 = {};
-        detail3.name = "锦淼纺织有限公司";
-        detail3.address = "广东省东莞市大朗镇富华北路293号";
-        detail3.star = "羊毛马海毛";
-        stores.push(detail1);
-        stores.push(detail2);
-        stores.push(detail3);
-        return stores;
+        this.$http.get('http://wink.net.cn:5000/home/store').then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.stores = JSON.parse(response.bodyText).data;
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
       },
-      jumpToProduct: function() {
-        this.$router.push('/product');
+      jumpToProduct: function(productId) {
+        this.$router.push('/product/'+productId);
       },
       jumpToVendor: function() {
         this.$router.push('/vendor');

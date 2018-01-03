@@ -1,0 +1,27 @@
+// 入驻商家
+// http://wink.net.cn:5000/home/store
+// method: get
+// respond:
+  var req = {
+    isSuccess: true,
+    msg: "获取入驻商家成功",
+    data: [
+    {
+      id: "1",
+      name: "彬彬纺织贸易有限公司",
+      address: "广东省东莞市大朗镇康丰路90号",
+      star: "长纤人造毛"
+    },
+    {
+      id: "2",
+      name: "泓鑫泰纺织有限公司",
+      address: "广东省东莞市大朗镇富康路286-288号",
+      star: "有色棉纱"
+    },
+    {
+      id: "2",
+      name: "锦淼纺织有限公司",
+      address: "广东省东莞市大朗镇富华北路293号",
+      star: "羊毛马海毛"
+    }]
+  }
