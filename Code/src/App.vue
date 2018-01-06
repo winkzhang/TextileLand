@@ -8,7 +8,7 @@
           <a class="register action" @click="showSignUp = true">注册</a>
         </div>
         <div v-show="haveuser">
-          <i class="buy-car new-action"></i>
+          <i class="buy-car new-action" @click="toShowBuyCar"></i>
           <i class="my-order new-action" @click="jumpToOrder"></i>
           <span class="username">{{username}}</span>
         </div>
@@ -59,6 +59,31 @@
         <div class="buy-box-header">
           <i class="logo buy-logo-login"></i>
         </div>
+        <div class="buy-car-content">
+          <div class="buy-car-detail">
+            <div class="buy-car-item" v-for="item in buyCar">
+              <input name="favor" type="checkbox" />
+              <div class="car-item-name">
+                <span class="car-product-name">{{item.name}}</span>
+                <span>{{item.spec}}</span>
+                <span>{{item.color}}</span>
+              </div>
+              <div class="car-item-store">
+                <i class="car-img"></i>
+                <span>{{item.store}}</span>
+              </div>
+              <div class="car-price">￥{{item.price}}</div>
+              <input type="text" v-model="item.number" class="car-number"/>
+              <span class="car-number-unit">kg</span>
+              <a class="car-delete">删除</a>
+            </div>
+          </div>
+          <div class="car-footer">
+            <span class="account-word">合计：</span>
+            <span class="account-price">￥{{totalPrice}}</span>
+            <a class="account-button" @click="goPay">结算</a>
+          </div>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -71,7 +96,7 @@ export default {
     return {
       showLogIn: false,
       showSignUp: false,
-      showBuyCar: true,
+      showBuyCar: false,
       loginPhone: '',
       loginPassword: '',
       signUpPhone: '',
@@ -79,7 +104,28 @@ export default {
       signUpPassword: '',
       nouser: true,
       haveuser: false,
-      username: ''
+      username: '',
+      buyCar: [
+        {
+          id: "1",
+          name: "长纤人造毛",
+          store: "彬彬纺织贸易有限公司",
+          spec: "24/2",
+          color: "92222",
+          price: 60,
+          number: 2
+        },
+        {
+          id: "2",
+          name: "有色丝光棉",
+          store: "广顺纺织贸易部",
+          spec: "28/2",
+          color: "828333",
+          price: 100,
+          number: 4
+        }
+      ],
+      totalPrice: 520
     }
   },
   methods: {
@@ -92,17 +138,18 @@ export default {
       }
       this.$http.post('http://wink.net.cn:5000/login', login).then(
         (response) => {
-          console.log(JSON.parse(response.bodyText));
+          //console.log(JSON.parse(response.bodyText));
           //console.log(JSON.parse(response.bodyText).msg);
           this.$message(JSON.parse(response.bodyText).msg);
           if (JSON.parse(response.bodyText).isSuccess === true) {
             this.nouser = false;
             this.haveuser = true;
-            this.username = JSON.parse(response.bodyText).info;
+            this.username = JSON.parse(response.bodyText).data;
           }
         })
     },
     signup: function() {
+      this.showSignUp = false;
       var login = {
         "number": this.signUpPhone,
         "username": this.signUpName,
@@ -111,12 +158,20 @@ export default {
       }
       this.$http.post('http://wink.net.cn:5000/signup', login).then(
         (response) => {
-          console.log(response.data.isSuccess);
-          console.log(response.data.msg);
+          this.$message(JSON.parse(response.bodyText).msg);
+          //console.log(response.data.isSuccess);
+          //console.log(response.data.msg);
         })
     },
     jumpToOrder: function() {
       this.$router.push('/myorder');
+    },
+    goPay: function() {
+      this.showBuyCar = false;
+      this.$router.push('/firmorder');
+    },
+    toShowBuyCar: function() {
+      this.showBuyCar = true;
     }
   }
 }
@@ -284,6 +339,140 @@ export default {
   .sign-content {
     height: 409px;
     width: 483px;
+  }
+  .buy-car-content {
+    width: 584px;
+    height: 439px;
+    position: relative;
+  }
+  .car-footer {
+    position: absolute;
+    bottom: 50px;
+    height: 50px;
+    width: 584px;
+  }
+  .account-button {
+    display: inline-block;
+    width: 78px;
+    height: 37px;
+    background-color: #F57905;
+    color: #fff;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    position: absolute;
+    right: 30px;
+    text-align: center;
+    padding-top: 10px;
+    cursor: pointer;
+  }
+  span.account-price {
+    color: #F57905;
+    font-weight: bold;
+    font-size: 20px;
+    position: absolute;
+    right: 130px;
+    top: 10px;
+  }
+  span.account-word {
+    color: #333333;
+    font-weight: normal;
+    font-size: 18px;
+    position: absolute;
+    right: 185px;
+    top: 10px;
+  }
+  .buy-car-detail {
+    width: 524px;
+    margin: 30px auto;
+  }
+  .buy-car-item {
+    height: 95px;
+    width: 524px;
+    border-bottom: 1px solid #F57905;
+    position: relative;
+  }
+  .buy-car-item input {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 37px;
+    left: 0px;
+  }
+  .car-item-name {
+    height: 23px;
+    position: absolute;
+    top: 20px;
+    left: 40px;
+  }
+  .car-item-store {
+    height: 20px;
+    position: absolute;
+    top: 50px;
+    left: 40px;
+  }
+  .car-item-name span.car-product-name {
+    font-size: 16px;
+    color: #333333;
+    margin-right: 16px;
+  }
+  .car-item-name span {
+    font-size: 14px;
+    color: #999999;
+    margin-right: 12px;
+  }
+  .car-item-store span {
+    position: absolute;
+    width: 200px;
+    top: 10px;
+    left: 30px;
+    font-size: 14px;
+    color: #999999;
+    text-align: left;
+  }
+  .car-img {
+    display: inline-block;
+    background: url("assets/home/stores.png") no-repeat;
+    background-size: 20px 20px;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+  }
+  .car-price {
+    position: absolute;
+    top: 37px;
+    left: 250px;
+    font-weight: bold;
+    font-size: 20px;
+    color: #F57905;
+  }
+  input.car-number {
+    position: absolute;
+    top: 32px;
+    left: 330px;
+    font-size: 16px;
+    color: #F57905;
+    text-align: center;
+    width: 60px;
+    height: 30px;
+    border: 2px solid #F57905;
+    border-radius: 8px;
+  }
+  .car-number-unit {
+    position: absolute;
+    top: 37px;
+    left: 405px;
+    font-size: 12px;
+    color: #999999;
+  }
+  .car-delete {
+    cursor: pointer;
+    position: absolute;
+    top: 37px;
+    right: 30px;
+    font-size: 12px;
+    color: #999999;
   }
   .logo-login {
     top: 5px;
