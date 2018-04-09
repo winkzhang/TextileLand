@@ -1,0 +1,12 @@
+﻿// 根据选择的商品和商家，获取支数和色卡pdf
+// http://wink.net.cn:5000/getSpec?productId=1&&companyName="彬彬纺织"
+// method: get
+// respond:
+   var req = {
+     isSuccess: true,
+     msg: "获取支数和色卡成功",
+     data: {
+       specs: ["22/2", "24/2", "28/2"],
+       pdf: ""
+     }
+   };

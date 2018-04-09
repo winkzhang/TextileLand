@@ -7,11 +7,15 @@ import VueReasource from 'vue-resource'
 import VueCarousel  from 'vue-carousel'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import api from './config/api'
 
 Vue.use(VueReasource)
 Vue.use(VueCarousel)
 Vue.use(Element)
 Vue.config.productionTip = false
+Object.defineProperty(Vue.prototype, '$api', {
+  value: api
+})
 
 /* eslint-disable no-new */
 new Vue({

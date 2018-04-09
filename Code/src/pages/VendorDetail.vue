@@ -7,7 +7,7 @@
         <span class="vendor-name">{{vendorName}}</span>
       </div>
       <div class="vendor-detail">
-        <div class="vendor-img"><img src="src/assets/vendor/binbin.jpg" /></div>
+        <div class="vendor-img"><img :src="companyPic" /></div>
         <div class="detail-right">
           <div class="detail-name">{{vendorName}}</div>
           <div class="detail-wrapper">
@@ -24,7 +24,7 @@
             <div class="detail-item-per">
               <i class="item-tax-icon"></i>
               <label class="detail-title">传真</label>
-              <span class="detail-value">{{tax}}</span>
+              <span class="detail-value">{{fax}}</span>
             </div>
             <div class="detail-item-per">
               <i class="item-product-icon"></i>
@@ -41,7 +41,7 @@
           <label class="per-title">选择产品</label>
           <div class="product-item-right">
             <el-radio-group v-model="selectedProduct">
-              <el-radio-button v-for="item in products" :key='item.key' :label='item.name'></el-radio-button>
+              <el-radio-button v-for="item in products" :key='item.productId' :label='item.productName'></el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -49,7 +49,7 @@
           <label class="per-title">选择支数</label>
           <div class="product-item-right">
             <el-radio-group v-model="selectedSize">
-              <el-radio-button v-for="item in sizes" :key='item.key' :label='item.name'></el-radio-button>
+              <el-radio-button v-for="item in sizes" :key='item' :label='item'></el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -86,43 +86,87 @@
     name: 'VendorDetail',
     data () {
       return {
-        vendorName: '彬彬纺织贸易有限公司',
-        address: '广东省东莞市大朗镇康丰路90号',
-        phone: '13922973319',
-        tax: '0769-83019915',
-        product: '长纤人造毛',
-        products: [
-          {
-            name: '长纤人造毛',
-            key: 'renzaomao'
-          }, {
-            name:'抗起球冰爽丝',
-            key: 'bingshuang'
-          }, {
-            name: '仿亚麻',
-            key: 'yama'
-          }],
-        selectedProduct: '长纤人造毛',
-        sizes: [
-          {
-            name: '28/2',
-            key: '28'
-          }, {
-            name:'24/2',
-            key: '24'
-          }, {
-            name: '22/2',
-            key: '22'
-          }],
-        selectedSize: '24/2',
+        companyName: '',
+        vendorName: '',
+        companyPic: '',
+        address: '',
+        phone: '',
+        fax: '',
+        product: '',
+        products: [],
+        selectedProduct: '',
+        sizes: [],
+        selectedSize: '',
         number: 1
       }
     },
     methods: {
       jumpToFirm: function() {
         this.$router.push('/firmorder');
+      },
+      getVendorDetail: function() {
+        this.$http.get(this.$api.api.getvendordetail+this.companyName).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.vendorName = JSON.parse(response.bodyText).data.company;
+              this.companyPic = JSON.parse(response.bodyText).data.pic;
+              this.address = JSON.parse(response.bodyText).data.address;
+              this.phone = JSON.parse(response.bodyText).data.phone;
+              this.fax = JSON.parse(response.bodyText).data.fax;
+              this.products = JSON.parse(response.bodyText).data.products;
+              if (this.products.length !== 0) {
+                this.selectedProduct = this.products[0].productName;
+                this.showProducts();
+              }
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
+      },
+      showProducts: function() {
+        var amount = this.products.length;
+        for (var i = 0; i < amount-1; i++) {
+          this.product += this.products[i].productName + ' | ';
+        }
+        this.product += this.products[i].productName;
+      },
+      getSpec: function() {
+        var productId = this.findProductId();
+        var getspec = '';
+        getspec = this.$api.api.getspec.replace(/productid/, productId);
+        getspec = getspec.replace(/companyname/, this.companyName);
+        this.$http.get(getspec).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.sizes = JSON.parse(response.bodyText).data.specs;
+              if (this.sizes.length !== 0) {
+                this.selectedSize = this.sizes[0];
+              }
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
+      },
+      findProductId: function() {
+        var productId;
+        for (var i = 0; i < this.products.length; i++) {
+          if (this.products[i].productName === this.selectedProduct) {
+            productId = this.products[i].productId;
+            break;
+          }
+        }
+        return productId;
       }
     },
+    watch: {
+      selectedProduct() {
+        this.getSpec();
+      }
+    },
+    mounted () {
+      this.companyName = this.$route.params.company;
+      this.getVendorDetail();
+    }
 
   }
 </script>

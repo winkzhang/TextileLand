@@ -1,0 +1,24 @@
+﻿// 商家详情
+// http://wink.net.cn:5000/store/detail?companyname="昊总后宫"
+// method: get
+// respond:
+   var req = {
+     isSuccess: true,
+     msg: "获取商家信息成功",
+     data: {
+       company: "昊总后宫",
+       address: "山东省烟台市",
+       phone: "13609756780",
+       fax: "5201314",
+       pic_path: "",
+       products: [
+       {
+         id: "1",
+         name: "长纤人造毛"
+       },
+       {
+         id: "7",
+         name: "仿亚麻"
+       }]
+     }
+   };

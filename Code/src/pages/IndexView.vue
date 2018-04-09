@@ -32,7 +32,7 @@
             <i class="store-star-img"></i>
             <span class="store-star-word">主打{{item.star}}等</span>
           </div>
-          <a class="store-go" @click="jumpToVendor"><i class="store-go-img"></i><span>逛一逛</span></a>
+          <a class="store-go" @click="jumpToVendor(item.name)"><i class="store-go-img"></i><span>逛一逛</span></a>
         </div>
 
       </div>
@@ -68,7 +68,7 @@
         /*var image = new Image();
         image.src = "static/type_one.png";
         var base64 = this.getBase64Image(image);*/
-        this.$http.get('http://wink.net.cn:5000/home/commodity').then(
+        this.$http.get(this.$api.api.getcommodity).then(
           (response) => {
             if (JSON.parse(response.bodyText).isSuccess === true) {
               this.products = JSON.parse(response.bodyText).data;
@@ -88,7 +88,7 @@
           })
       },
       getStore: function() {
-        this.$http.get('http://wink.net.cn:5000/home/store').then(
+        this.$http.get(this.$api.api.getstore).then(
           (response) => {
             if (JSON.parse(response.bodyText).isSuccess === true) {
               this.stores = JSON.parse(response.bodyText).data;
@@ -100,8 +100,8 @@
       jumpToProduct: function(productId) {
         this.$router.push('/product/'+productId);
       },
-      jumpToVendor: function() {
-        this.$router.push('/vendor');
+      jumpToVendor: function(companyName) {
+        this.$router.push('/vendor/'+companyName);
       }
     },
     mounted () {

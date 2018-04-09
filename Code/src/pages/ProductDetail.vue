@@ -36,7 +36,7 @@
           <label class="per-title">选择支数</label>
           <div class="product-item-right">
             <el-radio-group v-model="selectedSize">
-              <el-radio-button v-for="item in sizes" :key='item.key' :label='item.name'></el-radio-button>
+              <el-radio-button v-for="item in sizes" :key='item' :label='item'></el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -55,7 +55,9 @@
         </div>
         <div class="per-item">
           <label class="per-title">价格</label>
-          <div></div>
+          <div class="product-item-right">
+            <label class="show_price">{{price}}</label>
+          </div>
         </div>
         <div class="product-control">
           <a class="buy-car"><i class="buy-car-icon"></i><span>加入购物车</span></a>
@@ -82,24 +84,11 @@
         productMake: "",
         productPrice: "",
         stores: [],
-        /*stores: [{
-          id: "",
-          company_name: ""
-        }],*/
-        sizes: [
-          {
-            name: '28/2',
-            key: '28'
-          }, {
-            name:'24/2',
-            key: '24'
-          }, {
-            name: '22/2',
-            key: '22'
-          }],
+        sizes: [],
         selectedStore: "",
-        selectedSize: '24/2',
+        selectedSize: '',
         number: 1,
+        price: '',
         imageName: "",
         productId: ""
       }
@@ -109,7 +98,7 @@
         this.$router.push('/firmorder');
       },
       getProductDetail: function(productId) {
-        this.$http.get('http://wink.net.cn:5000/product/detail?id='+productId).then(
+        this.$http.get(this.$api.api.getproductdetail+productId).then(
           (response) => {
             if (JSON.parse(response.bodyText).isSuccess === true) {
               this.productName = JSON.parse(response.bodyText).data.name;
@@ -159,7 +148,52 @@
               this.$message(JSON.parse(response.bodyText).msg);
             }
           })
+      },
+      getSpec: function() {
+        var companyName = this.selectedStore;
+        var getspec = '';
+        getspec = this.$api.api.getspec.replace(/productid/, this.productId);
+        getspec = getspec.replace(/companyname/, companyName);
+        this.$http.get(getspec).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.sizes = JSON.parse(response.bodyText).data.specs;
+              if (this.sizes.length !== 0) {
+                this.selectedSize = this.sizes[0];
+              }
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
+      },
+      getPrice: function() {
+        var getprice = '';
+        getprice = this.$api.api.getprice.replace(/productid/,this.productId);
+        getprice = getprice.replace(/companyname/, this.selectedStore);
+        getprice = getprice.replace(/specvalue/, this.selectedSize);
+        getprice = getprice.replace(/numbervalue/, this.number);
+        this.$http.get(getprice).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.price = JSON.parse(response.bodyText).data.price;
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
       }
+    },
+    watch: {
+      selectedStore() {
+        this.getSpec();
+        //this.getPrice();
+      },
+      selectedSize() {
+        this.getPrice();
+      },
+      number() {
+        this.getPrice();
+      }
+
     },
     mounted () {
       this.productId = this.$route.params.id;
@@ -387,5 +421,14 @@
   position: absolute;
   left: 12px;
   top: 14px;
+}
+.show_price {
+  display: inline-block;
+  width: 100px;
+  height: 45px;
+  font-size: 30px;
+  color: #fff;
+  position: relative;
+  top: 7px;
 }
 </style>

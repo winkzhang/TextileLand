@@ -1,0 +1,11 @@
+﻿// 根据选择的商品、商家和支数，获取价格
+// http://wink.net.cn:5000/getPrice?productId=1&&companyName="彬彬纺织"&&spec="28/2"&&number="2"
+// method: get
+// respond:
+   var req = {
+     isSuccess: true,
+     msg: "获取价格成功",
+     data: {
+       price: 22
+     }
+   };

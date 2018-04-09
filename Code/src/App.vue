@@ -136,15 +136,17 @@ export default {
         "password": this.loginPassword,
         "identity": "customer"
       }
-      this.$http.post('http://wink.net.cn:5000/login', login).then(
+      this.$http.post(this.$api.api.login, login).then(
         (response) => {
           //console.log(JSON.parse(response.bodyText));
           //console.log(JSON.parse(response.bodyText).msg);
-          this.$message(JSON.parse(response.bodyText).msg);
           if (JSON.parse(response.bodyText).isSuccess === true) {
+            this.$message(JSON.parse(response.bodyText).msg);
             this.nouser = false;
             this.haveuser = true;
             this.username = JSON.parse(response.bodyText).data;
+          } else {
+            this.$message(JSON.parse(response.bodyText).msg);
           }
         })
     },
@@ -156,7 +158,7 @@ export default {
         "password": this.signUpPassword,
         "identity": "customer"
       }
-      this.$http.post('http://wink.net.cn:5000/signup', login).then(
+      this.$http.post(this.$api.api.signup, login).then(
         (response) => {
           this.$message(JSON.parse(response.bodyText).msg);
           //console.log(response.data.isSuccess);
