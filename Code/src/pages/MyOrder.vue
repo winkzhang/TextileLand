@@ -1,3 +1,4 @@
+<!--author:winkzhang-->
 <template>
   <div class="index">
     <div class="product-header">
@@ -21,10 +22,10 @@
         </thead>
         <tbody>
           <tr v-for="item in orders">
-            <td>{{item.product}}</td>
-            <td>{{item.store}}</td>
-            <td>{{item.number}}</td>
-            <td>{{item.totalprice}}</td>
+            <td>{{item.productName}}</td>
+            <td>{{item.company}}</td>
+            <td>{{item.amount}}</td>
+            <td>{{item.total_price}}</td>
             <td>{{item.status}}</td>
             <td>{{item.spec}} | {{item.color}}</td>
             <td style="position:relative;width:10%"><a class="go-pay" v-if="item.status === '待支付'" @click="goToPay">去支付</a><a class="cancel">取消</a></td>
@@ -40,6 +41,12 @@
 
   export default {
     name: 'MyOrder',
+    props: {
+      username: {
+        type: String,
+        required: true
+      }
+    },
     data () {
       return {
         productName: '我的订单',
@@ -48,42 +55,21 @@
     },
     methods: {
       getOrder: function() {
-        var order = [];
-        var detail1 = {};
-        detail1.product = "丝光棉";
-        detail1.store = "广顺棉纱经营部";
-        detail1.number = 4;
-        detail1.totalprice = 400;
-        detail1.status = "待支付";
-        detail1.spec = "28/2";
-        detail1.color = "823333";
-        var detail2 = {};
-        detail2.product = "长纤人造毛";
-        detail2.store = "彬彬纺织贸易有限公司";
-        detail2.number = 2;
-        detail2.totalprice = 120;
-        detail2.status = "待发货";
-        detail2.spec = "24/2";
-        detail2.color = "922222";
-        var detail3 = {};
-        detail3.product = "兔绒包芯纱";
-        detail3.store = "泓鑫泰纺织有限公司";
-        detail3.number = 1;
-        detail3.totalprice = 55;
-        detail3.status = "已发货";
-        detail3.spec = "28/2";
-        detail3.color = "834533";
-        order.push(detail1);
-        order.push(detail2);
-        order.push(detail3);
-        return order;
+        this.$http.get(this.$api.api.getorder+this.username).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.orders = JSON.parse(response.bodyText).data.order;
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
       },
       goToPay: function() {
         this.$router.push('/pay');
       }
     },
     mounted () {
-      this.orders = this.getOrder();
+      this.getOrder();
     }
 
   }

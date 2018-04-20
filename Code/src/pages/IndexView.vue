@@ -1,3 +1,4 @@
+<!--author:winkzhang-->
 <template>
   <div class="index" id="index">
     <div class="carousel">

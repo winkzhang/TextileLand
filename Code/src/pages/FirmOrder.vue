@@ -1,3 +1,4 @@
+<!--author:winkzhang-->
 <template>
   <div class="index">
     <div class="product-header">
@@ -11,15 +12,15 @@
       <div class="receiver-detail">
         <div class="receiver-item">
           <label>收货人</label>
-          <input type="text" />
+          <input type="text" v-model="rec_name"/>
         </div>
         <div class="receiver-item">
           <label>手机号</label>
-          <input type="text" />
+          <input type="text" v-model="rec_phone" />
         </div>
         <div class="receiver-item">
           <label>收获地址</label>
-          <input type="text" />
+          <input type="text" v-model="rec_address" />
         </div>
       </div>
     </div>
@@ -29,12 +30,12 @@
       <div class="order-detail">
         <div v-for="item in orders" class="item-per">
           <div class="order-header">
-            <span>{{item.name}}</span>
+            <span>{{item.productName}}</span>
             <i class="delete"></i>
           </div>
           <div class="order-item">
             <i class="order-store"></i>
-            <span>{{item.store}}</span>
+            <span>{{item.company}}</span>
           </div>
           <div class="order-item">
             <i class="order-spec"></i>
@@ -53,7 +54,7 @@
       <div class="account">
         <span class="account-word">合计：</span>
         <span class="account-price">￥{{totalPrice}}</span>
-        <a class="account-button" @click="goPay">去支付</a>
+        <a class="account-button" @click="submitOrder">提交订单</a>
       </div>
     </div>
   </div>
@@ -63,48 +64,80 @@
 
   export default {
     name: 'FirmOrder',
+    props: {
+      username: {
+        type: String,
+        required: true
+      }
+    },
     data () {
       return {
         pageName: '确认订单',
         orders: [],
-        totalPrice: 575
+        totalPrice: 0,
+        rec_name: "",
+        rec_phone: "",
+        rec_address: ""
       }
     },
     methods: {
-      getOrder: function () {
-        var orders = [];
-        var detail1 = {};
-        detail1.name = "丝光棉";
-        detail1.store = "广顺棉纱经营部";
-        detail1.spec = "28/2";
-        detail1.color = "828333";
-        detail1.price = 100;
-        detail1.number = 4;
-        var detail2 = {};
-        detail2.name = "长纤人造毛";
-        detail2.store = "彬彬纺织贸易有限公司";
-        detail2.spec = "24/2";
-        detail2.color = "922222";
-        detail2.price = 60;
-        detail2.number = 2;
-        var detail3 = {};
-        detail3.name = "兔绒包芯纱";
-        detail3.store = "泓鑫泰纺织有限公司";
-        detail3.spec = "28/2";
-        detail3.color = "834533";
-        detail3.price = 55;
-        detail3.number = 1;
-        orders.push(detail1);
-        orders.push(detail2);
-        orders.push(detail3);
-        return orders;
+      submitOrder: function() {
+        var order = {};
+        order.customer = this.username;
+        order.receiver_name = this.rec_name;
+        order.receiver_phone = this.rec_phone;
+        order.receiver_address = this.rec_address;
+        var record = [];
+        for (var i = 0; i < this.orders.length; i++) {
+          var item = {};
+          item.amount = this.orders[i].number;
+          item.total_price = this.orders[i].price * this.orders[i].number;
+          item.productName = this.orders[i].productName;
+          item.spec = this.orders[i].spec;
+          item.company = this.orders[i].company;
+          item.color = this.orders[i].color;
+          item.status = "待支付";
+          record.push(item);
+        }
+        order.detail = record;
+        this.$http.post(this.$api.api.submitorder, order).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.$message(JSON.parse(response.bodyText).msg);
+              // 当提交订单成功后，购物车内相关的条目要删除
+              for (var i = 0; i < this.orders.length; i++) {
+                if (this.orders[i].id !== 0) {
+                  var cart = {};
+                  cart.id = this.orders[i].id;
+                  this.$http.post(this.$api.api.deletecart, cart).then(
+                    (response) => {
+                      if (JSON.parse(response.bodyText).isSuccess === true) {
+                        //this.$message(JSON.parse(response.bodyText).msg);
+
+                      } else {
+                        this.$message(JSON.parse(response.bodyText).msg);
+                      }
+                    })
+                }
+              }
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
+        this.$router.push('/myorder');
       },
-      goPay: function() {
-        this.$router.push('/pay');
+      countPrice: function() {
+        var total = 0;
+        for (var i = 0; i < this.orders.length; i++) {
+          total += parseFloat(this.orders[i].price)*parseFloat(this.orders[i].number);
+        }
+        this.totalPrice = total;
       }
     },
     mounted () {
-      this.orders = this.getOrder();
+      this.orders = this.$route.query.data;
+      console.log(this.orders);
+      this.countPrice();
     }
 
   }

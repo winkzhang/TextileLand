@@ -1,0 +1,26 @@
+// 提交订单
+// http://wink.net.cn:5000/submittoorder
+// method: post
+// postbody
+   var order = {}
+   order.customer = "wink";
+   order.receiver_name = "111";
+   order.receiver_phone = "231421432";
+   order.receiver_address = "广东省广州市";
+   order.detail = record
+   var record = [];
+   var item = {};
+   item.amount = 5;
+   item.total_price = "321";
+   item.productName = "长纤人造毛";
+   item.spec = "23/2";
+   item.company = "小昊纺织有限公司";
+   item.color = "32132";
+   item.status = "待付款";
+   record.push(item);
+
+// respond:
+   var req = {
+     isSuccess: true,
+     msg: "提交订单成功"
+   };

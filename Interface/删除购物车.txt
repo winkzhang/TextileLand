@@ -1,0 +1,12 @@
+// 删除购物车的内容
+// http://wink.net.cn:5000/deletecart
+// method: post
+// postbody
+   var item = {};
+   item.id = "1";
+
+// respond:
+   var req = {
+     isSuccess: true,
+     msg: "删除购物车商品成功"
+   };

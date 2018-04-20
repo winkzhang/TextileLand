@@ -1,3 +1,4 @@
+<!--author:winkzhang-->
 import Vue from 'vue'
 import Router from 'vue-router'
 import IndexView from '@/pages/IndexView'

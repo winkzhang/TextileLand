@@ -1,3 +1,4 @@
+<!--author:winkzhang-->
 <template>
   <div id="app">
     <div class="header">
@@ -14,7 +15,7 @@
         </div>
       </div>
     </div>
-    <router-view/>
+    <router-view :username="username" />
     <div class="footer">
       <div class="footer-wrapper">
         <i class="logo logo-footer"></i>
@@ -62,20 +63,20 @@
         <div class="buy-car-content">
           <div class="buy-car-detail">
             <div class="buy-car-item" v-for="item in buyCar">
-              <input name="favor" type="checkbox" />
+              <input name="favor" type="checkbox" :value="item.id" v-model="item.checked" @click="item.checked = !item.checked" />
               <div class="car-item-name">
-                <span class="car-product-name">{{item.name}}</span>
+                <span class="car-product-name">{{item.productName}}</span>
                 <span>{{item.spec}}</span>
                 <span>{{item.color}}</span>
               </div>
               <div class="car-item-store">
                 <i class="car-img"></i>
-                <span>{{item.store}}</span>
+                <span>{{item.company}}</span>
               </div>
               <div class="car-price">￥{{item.price}}</div>
               <input type="text" v-model="item.number" class="car-number"/>
               <span class="car-number-unit">kg</span>
-              <a class="car-delete">删除</a>
+              <a class="car-delete" @click="deletecart(item.id)">删除</a>
             </div>
           </div>
           <div class="car-footer">
@@ -105,27 +106,8 @@ export default {
       nouser: true,
       haveuser: false,
       username: '',
-      buyCar: [
-        {
-          id: "1",
-          name: "长纤人造毛",
-          store: "彬彬纺织贸易有限公司",
-          spec: "24/2",
-          color: "92222",
-          price: 60,
-          number: 2
-        },
-        {
-          id: "2",
-          name: "有色丝光棉",
-          store: "广顺纺织贸易部",
-          spec: "28/2",
-          color: "828333",
-          price: 100,
-          number: 4
-        }
-      ],
-      totalPrice: 520
+      buyCar: [],
+      totalPrice: 0
     }
   },
   methods: {
@@ -170,10 +152,54 @@ export default {
     },
     goPay: function() {
       this.showBuyCar = false;
-      this.$router.push('/firmorder');
+      var arr = this.buyCar.filter(item => item.checked).map(item => item.id);
+      var deliver = [];
+      for (var i = 0; i < arr.length; i++) {
+        for (var j = 0; j < this.buyCar.length; j++) {
+          if (arr[i] === this.buyCar[j].id) {
+            var obj = {};
+            obj = this.buyCar[j];
+            deliver.push(obj);
+            break;
+          }
+        }
+      }
+      this.$router.push({
+        path: '/firmorder',
+        query: {data:deliver}
+      });
     },
     toShowBuyCar: function() {
       this.showBuyCar = true;
+      var showcart = "";
+      showcart = this.$api.api.showcart.replace(/customername/, this.username);
+      this.$http.get(showcart).then(
+        (response) => {
+          if (JSON.parse(response.bodyText).isSuccess === true) {
+            this.buyCar = JSON.parse(response.bodyText).data.item;
+            var length = this.buyCar.length;
+            for (var i = 0; i < length; i++) {
+              this.buyCar[i].checked = false;
+            }
+            this.totalPrice = JSON.parse(response.bodyText).data.totalprice;
+          } else {
+            this.$message(JSON.parse(response.bodyText).msg);
+          }
+        })
+    },
+    deletecart: function(cart_id) {
+      var cart = {};
+      cart.id = cart_id;
+      this.$http.post(this.$api.api.deletecart, cart).then(
+        (response) => {
+          if (JSON.parse(response.bodyText).isSuccess === true) {
+            this.$message(JSON.parse(response.bodyText).msg);
+            this.toShowBuyCar();
+
+          } else {
+            this.$message(JSON.parse(response.bodyText).msg);
+          }
+        })
     }
   }
 }
@@ -387,6 +413,8 @@ export default {
   .buy-car-detail {
     width: 524px;
     margin: 30px auto;
+    height: 320px;
+    overflow-y: auto;
   }
   .buy-car-item {
     height: 95px;

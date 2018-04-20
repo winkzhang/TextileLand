@@ -1,3 +1,4 @@
+<!--author:winkzhang-->
 <template>
   <div class="vendor-detail-wrapper">
     <div class="index">
@@ -56,7 +57,7 @@
         <div class="per-item">
           <label class="per-title">选择色号</label>
           <div class="product-item-right">
-            <el-input class="select-color"></el-input>
+            <el-input class="select-color" v-model="inputcolor">{{inputcolor}}</el-input>
             <a class="color-card">查看色卡</a>
           </div>
         </div>
@@ -68,11 +69,13 @@
         </div>
         <div class="per-item">
           <label class="per-title">价格</label>
-          <div></div>
+          <div class="product-item-right">
+            <label class="show_price">{{price}}</label>
+          </div>
         </div>
         <div class="product-control">
-          <a class="buy-car"><i class="buy-car-icon"></i><span>加入购物车</span></a>
-          <a class="ask-for-card"><i class="ask-for-card-icon"></i><span>索要色卡</span></a>
+          <a class="buy-car" @click="submitcart"><i class="buy-car-icon"></i><span>加入购物车</span></a>
+          <a class="ask-for-card" @click="askforcard"><i class="ask-for-card-icon"></i><span>索要色卡</span></a>
           <a class="buy-now" @click="jumpToFirm"><i class="buy-now-icon"></i><span>立即购买</span></a>
         </div>
       </div>
@@ -84,6 +87,12 @@
 
   export default {
     name: 'VendorDetail',
+    props: {
+      username: {
+        type: String,
+        required: true
+      }
+    },
     data () {
       return {
         companyName: '',
@@ -97,12 +106,31 @@
         selectedProduct: '',
         sizes: [],
         selectedSize: '',
-        number: 1
+        number: 1,
+        price: '',
+        inputcolor: ''
       }
     },
     methods: {
       jumpToFirm: function() {
-        this.$router.push('/firmorder');
+        if (this.inputcolor === "") {
+          this.$message("请选择色号");
+          return;
+        }
+        var arr  = [];
+        var order = {};
+        order.productName = this.selectedProduct;
+        order.company = this.companyName;
+        order.spec = this.selectedSize;
+        order.color = this.inputcolor;
+        order.number = this.number;
+        order.price = parseFloat(this.price) / this.number;
+        order.id = 0;
+        arr.push(order);
+        this.$router.push({
+          path: '/firmorder',
+          query: {data:arr}
+        });
       },
       getVendorDetail: function() {
         this.$http.get(this.$api.api.getvendordetail+this.companyName).then(
@@ -147,6 +175,22 @@
             }
           })
       },
+      getPrice: function() {
+        var productId = this.findProductId();
+        var getprice = '';
+        getprice = this.$api.api.getprice.replace(/productid/, productId);
+        getprice = getprice.replace(/companyname/, this.companyName);
+        getprice = getprice.replace(/specvalue/, this.selectedSize);
+        getprice = getprice.replace(/numbervalue/, this.number);
+        this.$http.get(getprice).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.price = JSON.parse(response.bodyText).data.price;
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
+      },
       findProductId: function() {
         var productId;
         for (var i = 0; i < this.products.length; i++) {
@@ -156,11 +200,57 @@
           }
         }
         return productId;
+      },
+      submitcart: function() {
+        if (this.inputcolor === "") {
+          this.$message("请选择色号");
+          return;
+        }
+        var cart = {};
+        cart.customer = this.username;
+        cart.productId = this.findProductId();
+        cart.company = this.companyName;
+        cart.spec = this.selectedSize;
+        cart.color = this.inputcolor;
+        cart.number = this.number;
+        cart.totalprice = this.price;
+        this.$http.post(this.$api.api.submitcart, cart).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.$message(JSON.parse(response.bodyText).msg);
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
+      },
+      askforcard: function() {
+        var cart = {};
+        cart.customer = this.username;
+        cart.productId = this.findProductId();
+        cart.company = this.companyName;
+        cart.spec = "colorcard";
+        cart.color = "";
+        cart.number = "1";
+        cart.totalprice = "0";
+        this.$http.post(this.$api.api.submitcart, cart).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.$message("该色卡已加入购物车");
+            } else {
+              this.$message("索要色卡失败");
+            }
+          })
       }
     },
     watch: {
       selectedProduct() {
         this.getSpec();
+      },
+      selectedSize() {
+        this.getPrice();
+      },
+      number() {
+        this.getPrice();
       }
     },
     mounted () {
@@ -414,5 +504,14 @@
     position: absolute;
     left: 12px;
     top: 14px;
+  }
+  .show_price {
+    display: inline-block;
+    width: 100px;
+    height: 45px;
+    font-size: 30px;
+    color: #fff;
+    position: relative;
+    top: 7px;
   }
 </style>

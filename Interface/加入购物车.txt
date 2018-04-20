@@ -1,0 +1,18 @@
+// 将选中的产品加入购物车
+// http://wink.net.cn:5000/submittocart
+// method: post
+// postbody
+   var cart = {};
+   cart.customer = "wink";
+   cart.productId = 1;
+   cart.company = "小昊纺织有限公司";
+   cart.spec = "22/2";
+   cart.color = "24333";
+   cart.number = "2";
+   cart.totalprice = "100";
+
+// respond:
+   var req = {
+     isSuccess: true,
+     msg: "加入购物车成功"
+   };

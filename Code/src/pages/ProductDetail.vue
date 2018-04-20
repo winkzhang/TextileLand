@@ -1,3 +1,4 @@
+<!--author:winkzhang-->
 <template>
   <div class="product-detail-wrapper">
     <div class="index">
@@ -43,7 +44,7 @@
         <div class="per-item">
           <label class="per-title">选择色号</label>
           <div class="product-item-right">
-            <el-input class="select-color"></el-input>
+            <el-input class="select-color" v-model="inputcolor">{{inputcolor}}</el-input>
             <a class="color-card">查看色卡</a>
           </div>
         </div>
@@ -60,8 +61,8 @@
           </div>
         </div>
         <div class="product-control">
-          <a class="buy-car"><i class="buy-car-icon"></i><span>加入购物车</span></a>
-          <a class="ask-for-card"><i class="ask-for-card-icon"></i><span>索要色卡</span></a>
+          <a class="buy-car" @click="submitcart"><i class="buy-car-icon"></i><span>加入购物车</span></a>
+          <a class="ask-for-card" @click="askforcard"><i class="ask-for-card-icon"></i><span>索要色卡</span></a>
           <a class="buy-now" @click="jumpToFirm"><i class="buy-now-icon"></i><span>立即购买</span></a>
         </div>
       </div>
@@ -72,6 +73,12 @@
 <script>
   export default {
     name: 'ProductDetail',
+    props: {
+      username: {
+        type: String,
+        required: true
+      }
+    },
     components: {
 
     },
@@ -90,12 +97,30 @@
         number: 1,
         price: '',
         imageName: "",
-        productId: ""
+        productId: "",
+        inputcolor: ""
       }
     },
     methods: {
       jumpToFirm: function() {
-        this.$router.push('/firmorder');
+        if (this.inputcolor === "") {
+          this.$message("请选择色号");
+          return;
+        }
+        var arr  = [];
+        var order = {};
+        order.productName = this.productName;
+        order.company = this.selectedStore;
+        order.spec = this.selectedSize;
+        order.color = this.inputcolor;
+        order.number = this.number;
+        order.price = parseFloat(this.price) / this.number;
+        order.id = 0;
+        arr.push(order);
+        this.$router.push({
+          path: '/firmorder',
+          query: {data:arr}
+        });
       },
       getProductDetail: function(productId) {
         this.$http.get(this.$api.api.getproductdetail+productId).then(
@@ -178,6 +203,46 @@
               this.price = JSON.parse(response.bodyText).data.price;
             } else {
               this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
+      },
+      submitcart: function() {
+        if (this.inputcolor === "") {
+          this.$message("请选择色号");
+          return;
+        }
+        var cart = {};
+        cart.customer = this.username;
+        cart.productId = this.productId;
+        cart.company = this.selectedStore;
+        cart.spec = this.selectedSize;
+        cart.color = this.inputcolor;
+        cart.number = this.number;
+        cart.totalprice = this.price;
+        this.$http.post(this.$api.api.submitcart, cart).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.$message(JSON.parse(response.bodyText).msg);
+            } else {
+              this.$message(JSON.parse(response.bodyText).msg);
+            }
+          })
+      },
+      askforcard: function() {
+        var cart = {};
+        cart.customer = this.username;
+        cart.productId = this.productId;
+        cart.company = this.selectedStore;
+        cart.spec = "colorcard";
+        cart.color = "";
+        cart.number = "1";
+        cart.totalprice = "0";
+        this.$http.post(this.$api.api.submitcart, cart).then(
+          (response) => {
+            if (JSON.parse(response.bodyText).isSuccess === true) {
+              this.$message("该色卡已加入购物车");
+            } else {
+              this.$message("索要色卡失败");
             }
           })
       }

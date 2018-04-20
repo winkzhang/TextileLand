@@ -1,0 +1,21 @@
+// 客户获取订单
+// http://wink.net.cn:5000/product/getorder?username="wink"
+// method: get
+
+// respond:
+   var req = {
+     isSuccess: true,
+     msg: "获取订单信息成功",
+     data; {
+         order: [
+           {
+           productName: "丝光棉",
+           company: "彬彬纺织",
+           amount: 4,
+           total_price: 400,
+           status: "待支付",
+           spec: "28/2",
+           color: "2311312"
+           }
+         ]
+     }

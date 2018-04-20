@@ -1,0 +1,22 @@
+// 显示出购物车内容
+// http://wink.net.cn:5000/showcart?username="wink"
+// method: get
+// respond:
+   var req = {
+     isSuccess: true,
+     msg: "查询购物车信息成功",
+     data: {
+         item: [
+         {
+             id: "2",
+             company: "彬彬纺织",
+             productName: "长纤人造毛",
+             spec: "24/2",
+             color: "92222",
+             price: "60",
+             number: "2"
+         }
+         ],
+         totalprice: 520
+     }
+   };
